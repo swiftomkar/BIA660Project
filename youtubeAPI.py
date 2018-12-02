@@ -51,13 +51,20 @@ def get_comments(youtube, video_id, channel_id, nextpg):
     except:
         nextpg=''
     writer = csv.writer(file)
-    writer.writerow(["id", "created_at", "user_id", "screen_name", "text"])
+    writer.writerow(['id', 'created_at', 'user_id', 'screen_name', 'text'])
     for item in results["items"]:
         comment = item["snippet"]["topLevelComment"]
         author = json.dumps(comment["snippet"]["authorDisplayName"])
+        author=author.replace('"','')
+
         text = json.dumps(comment["snippet"]["textDisplay"])
+        text=text.replace('"','')
+        textf=text.encode('utf-8')
         timestamp=json.dumps(comment["snippet"]["publishedAt"])
-        writer.writerow(['N/A',timestamp,author,'N/A',text])
+        timestamp=timestamp.replace('"','')
+        writer.writerow(['N/A',timestamp,author,'N/A',textf])
+        print(['N/A',timestamp,author,'N/A',text])
+
     file.close()
     if nextpg is not '':
         get_comments(youtube, currVideoId, None, nextpg)
